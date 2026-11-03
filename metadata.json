@@ -2,5 +2,7 @@
   "name": "OAuth Compass",
   "description": "Developer platform for OAuth setup guides, provider verification requirements, approval workflows, timelines, and AI-powered OAuth intelligence.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

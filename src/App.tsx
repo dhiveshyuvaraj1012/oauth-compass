@@ -140,7 +140,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 print:w-full print:block">
         <Header
           activePage={activePage}
           currentGuide={selectedGuide || undefined}
@@ -149,7 +149,7 @@ export default function App() {
           onOpenShareModal={() => handleOpenShare()}
         />
 
-        <main className="flex-1 pb-16">
+        <main className="flex-1 pb-16 print:pb-0 print:p-0">
           {activePage === 'dashboard' && (
             <DashboardView
               allGuides={allGuides}

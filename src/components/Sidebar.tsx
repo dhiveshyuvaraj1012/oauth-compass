@@ -258,13 +258,13 @@ export function Sidebar({
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:block shrink-0 h-screen sticky top-0">
+      <aside className="hidden lg:block shrink-0 h-screen sticky top-0 print:hidden">
         {navContent}
       </aside>
 
       {/* Mobile Sidebar overlay */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden flex">
+        <div className="fixed inset-0 z-50 lg:hidden flex print:hidden">
           <div
             className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs"
             onClick={() => setMobileOpen(false)}
@@ -276,7 +276,7 @@ export function Sidebar({
       {/* Mobile trigger floating button if closed */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed bottom-4 right-4 z-40 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg"
+        className="lg:hidden fixed bottom-4 right-4 z-40 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg print:hidden"
         title="Open Navigation"
       >
         <Menu className="w-5 h-5" />

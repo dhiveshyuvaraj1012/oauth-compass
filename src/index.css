@@ -1,1 +1,55 @@
 @import "tailwindcss";
+
+@media print {
+  /* Hide navigation, sidebars, headers, modals, floating action buttons */
+  aside,
+  header,
+  nav,
+  .print\:hidden,
+  [class*="print:hidden"],
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Reset layout constraints so all 11 sections print cleanly without overflow clipping */
+  html, body, #root, main {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Force background colors and borders to print accurately */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Prevent awkward page breaks inside steps, code blocks, and cards */
+  section,
+  .page-break-avoid,
+  .step-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* Clean preformatted code blocks */
+  pre, code {
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+  }
+
+  /* Expand full width for main content */
+  .main-print-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 1cm !important;
+  }
+}

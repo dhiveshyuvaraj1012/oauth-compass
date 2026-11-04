@@ -50,7 +50,7 @@ export function Header({
   };
 
   return (
-    <header className="h-14 border-b border-slate-200/90 bg-white/95 backdrop-blur-xs sticky top-0 z-30 flex items-center justify-between px-6">
+    <header className="h-14 border-b border-slate-200/90 bg-white/95 backdrop-blur-xs sticky top-0 z-30 flex items-center justify-between px-6 print:hidden">
       {/* Left: Breadcrumbs */}
       <div className="flex items-center space-x-3 text-xs font-medium text-slate-700">
         {getBreadcrumbs()}

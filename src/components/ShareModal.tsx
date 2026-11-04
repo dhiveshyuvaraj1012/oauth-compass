@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Check, Copy, X, Share2, Download, ExternalLink, Globe } from 'lucide-react';
+import { Check, Copy, X, Share2, Download, ExternalLink, Globe, Printer } from 'lucide-react';
 import { OAuthGuide } from '../types/oauth';
 import { DifficultyBadge } from './DifficultyBadge';
+import { generatePrintableHtml } from '../lib/pdfReportGenerator';
 
 interface ShareModalProps {
   guide: OAuthGuide;
@@ -12,6 +13,7 @@ interface ShareModalProps {
 export function ShareModal({ guide, isOpen, onClose }: ShareModalProps) {
   const [copiedUrl, setCopiedUrl] = useState(false);
   const [copiedMarkdown, setCopiedMarkdown] = useState(false);
+  const [downloadedPdf, setDownloadedPdf] = useState(false);
 
   if (!isOpen) return null;
 
@@ -71,6 +73,33 @@ Generated via OAuth Compass — ${shareableUrl}
     a.download = `${guide.slug}-oauth-guide.md`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadPdf = () => {
+    try {
+      const html = generatePrintableHtml(guide);
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${guide.slug}-oauth-guide-report.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      try {
+        const printWin = window.open(url, '_blank');
+        if (printWin) printWin.focus();
+      } catch {}
+
+      setDownloadedPdf(true);
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        setDownloadedPdf(false);
+      }, 3000);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -151,32 +180,49 @@ Generated via OAuth Compass — ${shareableUrl}
           {/* Export Options */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
-              Developer Export
+              Developer Export & PDF
             </label>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <button
+                onClick={handleDownloadPdf}
+                className="flex items-center justify-center space-x-1.5 px-3 py-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg text-xs font-semibold text-blue-700 transition-colors"
+              >
+                {downloadedPdf ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>PDF Ready</span>
+                  </>
+                ) : (
+                  <>
+                    <Printer className="w-3.5 h-3.5 text-blue-600" />
+                    <span>Print / PDF</span>
+                  </>
+                )}
+              </button>
+
               <button
                 onClick={handleCopyMarkdown}
-                className="flex items-center justify-center space-x-2 px-3 py-2 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors"
+                className="flex items-center justify-center space-x-1.5 px-3 py-2 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors"
               >
                 {copiedMarkdown ? (
                   <>
                     <Check className="w-3.5 h-3.5 text-emerald-600" />
-                    <span className="text-emerald-700">Copied Markdown</span>
+                    <span className="text-emerald-700">Copied</span>
                   </>
                 ) : (
                   <>
                     <Copy className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Copy Markdown</span>
+                    <span>Copy MD</span>
                   </>
                 )}
               </button>
 
               <button
                 onClick={handleDownloadMarkdown}
-                className="flex items-center justify-center space-x-2 px-3 py-2 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors"
+                className="flex items-center justify-center space-x-1.5 px-3 py-2 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors"
               >
                 <Download className="w-3.5 h-3.5 text-slate-500" />
-                <span>Download .MD File</span>
+                <span>Download .MD</span>
               </button>
             </div>
           </div>

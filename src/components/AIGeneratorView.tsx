@@ -518,7 +518,7 @@ export function AIGeneratorView({ onGuideGenerated, onOpenShareModal }: AIGenera
                   Clickable links directly verified and associated with the specific technical requirements they support.
                 </p>
               </div>
-              <FactBadge type="officially_documented" />
+              <EvidenceBadge status="primary-docs" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
@@ -591,7 +591,7 @@ export function AIGeneratorView({ onGuideGenerated, onOpenShareModal }: AIGenera
                   Steps requiring manual engineer intervention in developer consoles are clearly flagged.
                 </p>
               </div>
-              <FactBadge type="officially_documented" />
+              <EvidenceBadge status="primary-docs" />
             </div>
 
             <div className="space-y-2.5">
@@ -615,7 +615,7 @@ export function AIGeneratorView({ onGuideGenerated, onOpenShareModal }: AIGenera
                           <span>Developer Action Required</span>
                         </span>
                       )}
-                      <FactBadge type={step.factType || 'officially_documented'} showIcon={false} />
+                      <EvidenceBadge status={step.status || 'primary-docs'} />
                     </div>
                   </div>
 
@@ -650,7 +650,7 @@ export function AIGeneratorView({ onGuideGenerated, onOpenShareModal }: AIGenera
                   <HelpCircle className="w-4 h-4 text-amber-600" />
                   <span>What the Agent Could Not Confirm (Unverified):</span>
                 </h4>
-                <FactBadge type="not_verified" showIcon={false} />
+                <EvidenceBadge status="unverified" />
               </div>
               <p className="text-amber-800 text-[11px]">
                 The following points could not be confirmed in public identity provider documentation and require direct verification within your developer workspace:
@@ -670,7 +670,7 @@ export function AIGeneratorView({ onGuideGenerated, onOpenShareModal }: AIGenera
                 <LinkIcon className="w-4 h-4 text-blue-600" />
                 <span>Redirect URI Configuration Rules:</span>
               </h4>
-              <FactBadge type="officially_documented" />
+              <EvidenceBadge status="primary-docs" />
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px]">
               <div>Localhost Allowed: <strong className="text-slate-800">{generatedGuide.redirectUriConfig.localhostAllowed ? 'Yes' : 'No'}</strong></div>

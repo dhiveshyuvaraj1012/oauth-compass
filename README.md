@@ -95,9 +95,6 @@ Generated guides can be shared with other developers through their corresponding
 | Build tool | Vite |
 | Styling | Tailwind CSS |
 | AI integration | Google Gemini API |
-| Deployment platform | [Confirm actual platform] |
-| Backend runtime | [Specify actual implementation or state that no separate backend is used] |
-| Storage | [Specify actual implementation, such as browser localStorage, if applicable] |
 
 ---
 

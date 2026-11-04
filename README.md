@@ -25,20 +25,22 @@ Developers integrating third-party applications often face challenges such as:
 
 OAuth Compass addresses these challenges through a centralized library of OAuth guides and an AI-powered research workflow for applications outside the existing directory.
 
+---
+
 ## 2. Key Features
 
-### OAuth Application Directory (Initial Setup of main 4 apps focused)
+### OAuth Application Directory
 
-Browse structured OAuth setup guides for:
+The initial directory focuses on four OAuth providers:
 
 - GitHub
 - Slack
 - Google Drive
 - HubSpot
 
-### Application Search (Can be extended using search)
+### Application Search
 
-Search for an application using its name or website.
+Search for an application using its name or website. The directory can be extended to support additional applications.
 
 ### Step-by-Step OAuth Guides
 
@@ -93,9 +95,9 @@ Generated guides can be shared with other developers through their corresponding
 | Build tool | Vite |
 | Styling | Tailwind CSS |
 | AI integration | Google Gemini API |
-| Deployment platform | Google AI Studio / Google Cloud Run |
-| Backend runtime | Node.js (if implemented) |
-| Persistent storage | Specify actual implementation |
+| Deployment platform | [Confirm actual platform] |
+| Backend runtime | [Specify actual implementation or state that no separate backend is used] |
+| Storage | [Specify actual implementation, such as browser localStorage, if applicable] |
 
 ---
 
@@ -164,7 +166,20 @@ No successful provider approval or OAuth test is claimed without actual verifica
 
 ---
 
-## 6. Limitations
+## 6. Validation & Testing Results
+
+The following applications were selected to demonstrate different OAuth setup requirements and configuration challenges.
+
+| Application | Validation Focus | Result |
+|---|---|---|
+| GitHub | OAuth app registration and callback configuration | [Reviewed GitHub's official OAuth documentation and identified the application registration and callback URL configuration requirements. End-to-end authentication was not tested.] |
+| Slack | OAuth scopes, permissions and app configuration | [Reviewed Slack's OAuth documentation and identified the permission scopes and app configuration requirements. Workspace installation and authorization were not tested.] |
+| Google Drive | Google Cloud project and consent configuration | [Reviewed Google's OAuth documentation and identified the Cloud project, consent configuration and permission requirements. App verification and end-to-end authentication were not tested.] |
+| HubSpot | Developer app setup and OAuth configuration | [Reviewed HubSpot's developer documentation and identified the app setup and OAuth authorization requirements. Live authorization was not tested.] |
+
+These are the tested sample apps and also we can generate new apps if it is needed.
+
+## 7. Limitations
 
 - AI-generated guidance may require manual verification.
 - Provider documentation and policies can change.
@@ -173,10 +188,11 @@ No successful provider approval or OAuth test is claimed without actual verifica
 - Some setup and verification steps require direct developer involvement.
 - The initial directory demonstrates a focused selection of OAuth providers rather than a complete library of 100 applications.
 - Live research results depend on the availability and quality of accessible documentation.
+- Generated guide persistence and sharing depend on the application's actual storage implementation.
 
 ---
 
-## 7. Running Locally
+## 8. Running Locally
 
 ### Prerequisites
 
@@ -184,7 +200,7 @@ No successful provider approval or OAuth test is claimed without actual verifica
 - npm
 - Git
 
-### Clone the repository
+### Clone the Repository
 
 ```bash
 git clone https://github.com/dhiveshyuvaraj1012/oauth-compass.git
@@ -192,17 +208,17 @@ git clone https://github.com/dhiveshyuvaraj1012/oauth-compass.git
 cd oauth-compass
 ```
 
-### Install dependencies
+### Install Dependencies
 
 ```bash
 npm install
 ```
 
-### Configure environment variables
+### Configure Environment Variables
 
 Create a `.env.local` file if required by the implementation.
 
-Add the environment variables used by the server-side application.
+Add the environment variables used by the application.
 
 Example:
 
@@ -210,9 +226,9 @@ Example:
 GEMINI_API_KEY=your_gemini_api_key
 ```
 
-Never commit actual API keys or credentials to GitHub.
+Never commit actual API keys or credentials to GitHub. Use server-side secret management for production deployments.
 
-### Start the development server
+### Start the Development Server
 
 ```bash
 npm run dev
@@ -222,7 +238,7 @@ Open the local URL displayed in the terminal.
 
 ---
 
-## 8. Key Product Decisions
+## 9. Key Product Decisions
 
 1. Focused on a small selection of varied OAuth providers rather than generating a large collection of incomplete guides.
 2. Prioritized actionable setup instructions over generic OAuth explanations.
@@ -233,15 +249,14 @@ Open the local URL displayed in the terminal.
 
 ---
 
-## 9. Future Scope
+## 10. Future Scope
 
 - Expand the directory to cover 100 OAuth-enabled applications.
 - Improve automated source verification.
 - Add more provider-specific setup testing.
 - Improve guide freshness monitoring.
 - Expand agent capabilities to investigate additional setup steps where permitted.
-
----
+- Improve persistent storage and cross-user guide sharing.
 
 ---
 

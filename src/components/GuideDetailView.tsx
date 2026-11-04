@@ -34,6 +34,7 @@ import { getStepProgress, toggleStepProgress, toggleSavedGuide, getSavedGuideIds
 import { DifficultyBadge } from './DifficultyBadge';
 import { EvidenceBadge, SourcedDisplay } from './EvidenceBadge';
 import { CodeBlock } from './CodeBlock';
+import { AppLogo } from './AppLogo';
 
 interface GuideDetailViewProps {
   guide: OAuthGuide;
@@ -207,12 +208,14 @@ export function GuideDetailView({
       <section className="bg-white rounded-2xl border border-slate-200 p-6 shadow-2xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="flex items-start space-x-4">
-            <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center font-extrabold text-xl text-white shadow-sm shrink-0"
-              style={{ backgroundColor: guide.brandColor || '#2563EB' }}
-            >
-              {guide.name.slice(0, 2).toUpperCase()}
-            </div>
+            <AppLogo
+              name={guide.name}
+              slug={guide.slug}
+              brandColor={guide.brandColor}
+              logoUrl={guide.logoUrl}
+              website={guide.sources?.[0]?.url}
+              size="xl"
+            />
             <div>
               <div className="flex flex-wrap items-center gap-2.5">
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">

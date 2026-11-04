@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { OAuthGuide } from '../types/oauth';
 import { RecentlyViewedItem } from '../lib/storage';
+import { AppLogo } from './AppLogo';
 
 export type ActivePage = 'dashboard' | 'directory' | 'generator' | 'guide';
 
@@ -174,9 +175,13 @@ export function Sidebar({
                   }`}
                 >
                   <div className="flex items-center space-x-2 min-w-0">
-                    <span
-                      className="w-2 h-2 rounded-full shrink-0"
-                      style={{ backgroundColor: g.brandColor || '#2563EB' }}
+                    <AppLogo
+                      name={g.name}
+                      slug={g.slug}
+                      brandColor={g.brandColor}
+                      logoUrl={g.logoUrl}
+                      website={g.sources?.[0]?.url}
+                      size="sm"
                     />
                     <span className="truncate">{g.name}</span>
                   </div>

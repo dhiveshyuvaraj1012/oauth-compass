@@ -19,6 +19,7 @@ import { RecentlyViewedItem } from '../lib/storage';
 import { ActivePage } from './Sidebar';
 import { DifficultyBadge } from './DifficultyBadge';
 import { EvidenceBadge } from './EvidenceBadge';
+import { AppLogo } from './AppLogo';
 
 interface DashboardViewProps {
   allGuides: OAuthGuide[];
@@ -126,12 +127,14 @@ export function DashboardView({
                       className="p-2.5 hover:bg-slate-50 rounded-lg cursor-pointer flex items-center justify-between"
                     >
                       <div className="flex items-center space-x-2.5">
-                        <div
-                          className="w-7 h-7 rounded-md flex items-center justify-center font-bold text-[10px] text-white shrink-0"
-                          style={{ backgroundColor: g.brandColor || '#2563EB' }}
-                        >
-                          {g.name.slice(0, 2).toUpperCase()}
-                        </div>
+                        <AppLogo
+                          name={g.name}
+                          slug={g.slug}
+                          brandColor={g.brandColor}
+                          logoUrl={g.logoUrl}
+                          website={g.sources?.[0]?.url}
+                          size="sm"
+                        />
                         <div>
                           <span className="font-semibold text-xs text-slate-900">{g.name}</span>
                           <span className="text-[10px] text-slate-400 ml-2">{g.category}</span>
@@ -205,12 +208,14 @@ export function DashboardView({
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center space-x-3 min-w-0">
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm text-white shadow-xs shrink-0"
-                      style={{ backgroundColor: guide.brandColor || '#2563EB' }}
-                    >
-                      {guide.name.slice(0, 2).toUpperCase()}
-                    </div>
+                    <AppLogo
+                      name={guide.name}
+                      slug={guide.slug}
+                      brandColor={guide.brandColor}
+                      logoUrl={guide.logoUrl}
+                      website={guide.sources?.[0]?.url}
+                      size="lg"
+                    />
                     <div className="min-w-0">
                       <div className="flex items-center space-x-2">
                         <h3 className="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition-colors truncate">

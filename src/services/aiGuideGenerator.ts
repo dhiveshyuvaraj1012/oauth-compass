@@ -375,6 +375,7 @@ const tokenData = await response.json();
     viewCount: 1,
     tags: [cleanInput, 'OAuth 2.0', 'PKCE', 'Webhooks', 'REST API'],
     brandColor: '#2563EB',
+    logoUrl: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
     endpoints: {
       authorizationUrl: `https://${domain}/oauth/authorize`,
       tokenUrl: `https://${domain}/oauth/token`,

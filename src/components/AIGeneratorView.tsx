@@ -27,7 +27,9 @@ import {
 import { OAuthGuide } from '../types/oauth';
 import { requestGenerateGuide } from '../services/aiGuideGenerator';
 import { saveGuide } from '../lib/storage';
-import { FactBadge } from './FactBadge';
+import { DifficultyBadge } from './DifficultyBadge';
+import { EvidenceBadge, SourcedDisplay } from './EvidenceBadge';
+import { AppLogo, getAppLogoUrl } from './AppLogo';
 
 interface AIGeneratorViewProps {
   onGuideGenerated: (guide: OAuthGuide) => void;
@@ -35,10 +37,9 @@ interface AIGeneratorViewProps {
 }
 
 const RESEARCH_STAGES = [
-  { id: 1, label: 'Identifying application', description: 'Detecting identity platform, provider endpoints, and OAuth 2.0 grant types' },
-  { id: 2, label: 'Researching documentation', description: 'Investigating official developer portals, scope dictionaries, and API references' },
-  { id: 3, label: 'Analyzing requirements', description: 'Evaluating approval workflows, CASA/SOC2 security reviews, and common blockers' },
-  { id: 4, label: 'Generating guide', description: 'Synthesizing step-by-step instructions, redirect URI specs, and code snippets' },
+  { id: 1, label: 'Searching official docs...', description: 'Investigating official developer portals, scope dictionaries, and API references via Google Search' },
+  { id: 2, label: 'Checking review requirements...', description: 'Evaluating approval workflows, unlisted vs directory distribution, and security policies' },
+  { id: 3, label: 'Writing guide...', description: 'Synthesizing step-by-step instructions, redirect URI specs, actor labels, and evidence ledger' },
 ];
 
 const POPULAR_SUGGESTIONS = [
@@ -106,6 +107,11 @@ export function AIGeneratorView({ onGuideGenerated, onOpenShareModal }: AIGenera
         website: finalWebsite || undefined,
         useCase: customCase || useCase || 'Multi-tenant SaaS & API Integration',
       });
+
+      // Automatically attach and persist verified brand logo
+      if (!guide.logoUrl) {
+        guide.logoUrl = getAppLogoUrl(finalName, finalWebsite, guide.slug);
+      }
 
       // Automatically persist to guide storage
       saveGuide(guide);
@@ -181,19 +187,35 @@ export function AIGeneratorView({ onGuideGenerated, onOpenShareModal }: AIGenera
         <form onSubmit={e => handleGenerate(e)} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                Application Name or Website URL <span className="text-rose-500">*</span>
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                  Application Name or Website URL <span className="text-rose-500">*</span>
+                </label>
+                {appName.trim() && (
+                  <div className="flex items-center space-x-1.5 text-[11px] text-slate-500 font-medium animate-in fade-in">
+                    <span className="text-emerald-700 font-semibold flex items-center space-x-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
+                      <span>Live Logo:</span>
+                    </span>
+                    <AppLogo name={appName} website={website} size="sm" />
+                  </div>
+                )}
+              </div>
               <div className="relative">
                 <input
                   type="text"
                   value={appName}
                   onChange={e => setAppName(e.target.value)}
-                  placeholder="e.g. Notion, Linear, Discord, or https://notion.so"
-                  className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                  placeholder="App name or website, e.g. Zoom, Stripe, or asana.com"
+                  className="w-full pl-9 pr-11 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
                   disabled={isGenerating}
                 />
                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                {appName.trim() && (
+                  <div className="absolute right-2.5 top-2 shrink-0">
+                    <AppLogo name={appName} website={website} size="sm" />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -206,7 +228,7 @@ export function AIGeneratorView({ onGuideGenerated, onOpenShareModal }: AIGenera
                   type="text"
                   value={website}
                   onChange={e => setWebsite(e.target.value)}
-                  placeholder="https://notion.so or https://developers.notion.com"
+                  placeholder="https://zoom.us or https://asana.com"
                   className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
                   disabled={isGenerating}
                 />
@@ -266,12 +288,12 @@ export function AIGeneratorView({ onGuideGenerated, onOpenShareModal }: AIGenera
               {isGenerating ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Investigating {appName || 'Provider'}...</span>
+                  <span>{RESEARCH_STAGES[currentStageIndex]?.label || 'Researching...'}</span>
                 </>
               ) : (
                 <>
                   <Sparkles className="w-4 h-4" />
-                  <span>Generate Guide with AI</span>
+                  <span>Generate Guide</span>
                 </>
               )}
             </button>
@@ -282,15 +304,23 @@ export function AIGeneratorView({ onGuideGenerated, onOpenShareModal }: AIGenera
       {/* Research Status Indicator (Requirement 5) */}
       {isGenerating && (
         <div className="bg-white rounded-2xl border border-blue-200 p-6 shadow-sm space-y-5 animate-in fade-in duration-200">
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 shadow-2xs">
-              <Loader2 className="w-5 h-5 animate-spin" />
+          <div className="flex items-center space-x-3.5">
+            <div className="relative shrink-0">
+              <AppLogo name={appName} website={website} size="lg" />
+              <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-xs border border-blue-200">
+                <Loader2 className="w-3.5 h-3.5 text-blue-600 animate-spin" />
+              </div>
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-900">
-                Research Progress: {RESEARCH_STAGES[currentStageIndex].label}
-              </h3>
-              <p className="text-xs text-slate-500">
+              <div className="flex items-center space-x-2">
+                <h3 className="text-sm font-bold text-slate-900">
+                  {appName || 'Provider'}: {RESEARCH_STAGES[currentStageIndex].label}
+                </h3>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  Logo Active
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5">
                 Stage {currentStageIndex + 1} of {RESEARCH_STAGES.length}: {RESEARCH_STAGES[currentStageIndex].description}
               </p>
             </div>
@@ -345,29 +375,27 @@ export function AIGeneratorView({ onGuideGenerated, onOpenShareModal }: AIGenera
       {/* Generated Guide Result View */}
       {generatedGuide && !isGenerating && (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-md space-y-6 animate-in slide-in-from-bottom-2 duration-300">
+          {/* Agent Banner */}
+          <div className="p-3 bg-amber-50/90 border border-amber-300/80 rounded-xl flex items-center space-x-2 text-xs text-amber-900 font-medium">
+            <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+            <span>Generated by an agent, not reviewed by a person.</span>
+          </div>
+
           {/* Header & Actions */}
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-4 border-b border-slate-100">
             <div className="flex items-start space-x-3.5">
-              <div
-                className="w-13 h-13 rounded-xl flex items-center justify-center font-bold text-lg text-white shadow-xs shrink-0"
-                style={{ backgroundColor: generatedGuide.brandColor || '#2563EB' }}
-              >
-                {generatedGuide.name.slice(0, 2).toUpperCase()}
-              </div>
+              <AppLogo
+                name={generatedGuide.name}
+                slug={generatedGuide.slug}
+                brandColor={generatedGuide.brandColor}
+                logoUrl={generatedGuide.logoUrl}
+                website={website || generatedGuide.sources?.[0]?.url}
+                size="xl"
+              />
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="text-xl font-bold text-slate-900">{generatedGuide.name}</h3>
-                  <span
-                    className={`px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider ${
-                      generatedGuide.difficulty === 'Easy'
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : generatedGuide.difficulty === 'Medium'
-                        ? 'bg-amber-100 text-amber-800'
-                        : 'bg-rose-100 text-rose-800'
-                    }`}
-                  >
-                    {generatedGuide.difficulty} Difficulty
-                  </span>
+                  <DifficultyBadge difficulty={generatedGuide.difficulty} />
                   <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
                     Google Grounded Investigation
                   </span>
@@ -423,64 +451,42 @@ export function AIGeneratorView({ onGuideGenerated, onOpenShareModal }: AIGenera
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
             {/* Developer Effort */}
             <div className="bg-slate-50 p-3 rounded-lg border border-slate-200/80 space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="text-slate-500 text-[11px] font-medium uppercase tracking-wider">Developer Effort</span>
-                <FactBadge type="estimated_based_on_documented_requirements" showIcon={false} />
-              </div>
-              <div className="font-bold text-slate-800 flex items-center space-x-1">
-                <Clock className="w-3.5 h-3.5 text-blue-600" />
-                <span>{generatedGuide.estimatedDevTime}</span>
-              </div>
-              {generatedGuide.estimatedDevTimeNote && (
-                <p className="text-[10px] text-slate-500 leading-tight">{generatedGuide.estimatedDevTimeNote}</p>
-              )}
+              <span className="text-slate-500 text-[11px] font-medium uppercase tracking-wider block">Developer Effort</span>
+              <SourcedDisplay
+                value={generatedGuide.setupEffort?.value || generatedGuide.estimatedDevTime || '30–45 min'}
+                status={generatedGuide.setupEffort?.status || 'inferred'}
+                url={generatedGuide.setupEffort?.url || generatedGuide.sources?.[0]?.url}
+                explanation={generatedGuide.setupEffort?.explanation || 'Estimated based on documented requirements'}
+              />
             </div>
 
             {/* External Approval Waiting Time */}
             <div className="bg-slate-50 p-3 rounded-lg border border-slate-200/80 space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="text-slate-500 text-[11px] font-medium uppercase tracking-wider">External Approval Wait Time</span>
-                <FactBadge
-                  type={
-                    generatedGuide.estimatedReviewTime.includes('not publicly')
-                      ? 'not_verified'
-                      : 'officially_documented'
-                  }
-                  showIcon={false}
-                />
-              </div>
-              <div
-                className={`font-bold text-xs flex items-center space-x-1 ${
-                  generatedGuide.estimatedReviewTime.includes('not publicly')
-                    ? 'text-amber-800 font-semibold'
-                    : 'text-slate-800'
-                }`}
-              >
-                <Calendar className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-                <span className="truncate">{generatedGuide.estimatedReviewTime}</span>
-              </div>
-              {generatedGuide.estimatedReviewTimeNote && (
-                <p className="text-[10px] text-slate-500 leading-tight">{generatedGuide.estimatedReviewTimeNote}</p>
-              )}
+              <span className="text-slate-500 text-[11px] font-medium uppercase tracking-wider block">Approval Wait Time</span>
+              <SourcedDisplay
+                value={generatedGuide.approvalWait?.value || generatedGuide.estimatedReviewTime || 'Not published'}
+                status={generatedGuide.approvalWait?.status || 'unverified'}
+                url={generatedGuide.approvalWait?.url}
+                explanation={generatedGuide.approvalWait?.explanation || 'Could not find published review turnaround time'}
+              />
             </div>
 
             {/* Approval Gate */}
             <div className="bg-slate-50 p-3 rounded-lg border border-slate-200/80 space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="text-slate-500 text-[11px] font-medium uppercase tracking-wider">Approval Gate</span>
-                <FactBadge type="officially_documented" showIcon={false} />
-              </div>
-              <div className="font-semibold text-blue-700 truncate" title={generatedGuide.approvalType}>
-                {generatedGuide.approvalType}
-              </div>
-              <p className="text-[10px] text-slate-500">Provider distribution classification</p>
+              <span className="text-slate-500 text-[11px] font-medium uppercase tracking-wider block">Approval Gate</span>
+              <SourcedDisplay
+                value={generatedGuide.approvalGate?.value || generatedGuide.approvalType || 'Self-serve'}
+                status={generatedGuide.approvalGate?.status || 'primary-docs'}
+                url={generatedGuide.approvalGate?.url || generatedGuide.sources?.[0]?.url}
+                explanation={generatedGuide.approvalGate?.explanation}
+              />
             </div>
 
             {/* Auth Protocol */}
             <div className="bg-slate-50 p-3 rounded-lg border border-slate-200/80 space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 text-[11px] font-medium uppercase tracking-wider">Auth Protocol</span>
-                <FactBadge type="officially_documented" showIcon={false} />
+                <EvidenceBadge status="primary-docs" />
               </div>
               <div className="font-semibold text-slate-800 truncate" title={generatedGuide.authType}>
                 {generatedGuide.authType}
@@ -493,9 +499,10 @@ export function AIGeneratorView({ onGuideGenerated, onOpenShareModal }: AIGenera
           <div className="p-3 bg-slate-50/70 border border-slate-200 rounded-lg flex flex-wrap items-center justify-between gap-2 text-xs">
             <span className="text-slate-500 font-medium text-[11px]">Evidence Classification Standards:</span>
             <div className="flex flex-wrap items-center gap-2">
-              <FactBadge type="officially_documented" />
-              <FactBadge type="estimated_based_on_documented_requirements" />
-              <FactBadge type="not_verified" />
+              <EvidenceBadge status="primary-docs" />
+              <EvidenceBadge status="secondary" />
+              <EvidenceBadge status="inferred" />
+              <EvidenceBadge status="unverified" />
             </div>
           </div>
 

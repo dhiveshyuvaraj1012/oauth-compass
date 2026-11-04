@@ -18,6 +18,7 @@ import {
 import { OAuthGuide, DifficultyLevel } from '../types/oauth';
 import { DifficultyBadge, normalizeDifficulty } from './DifficultyBadge';
 import { EvidenceBadge, SourcedDisplay } from './EvidenceBadge';
+import { AppLogo } from './AppLogo';
 
 interface DirectoryViewProps {
   allGuides: OAuthGuide[];
@@ -299,12 +300,14 @@ export function DirectoryView({
                     {/* Sticky Application Column */}
                     <td className="py-3.5 px-4 sticky left-0 bg-white group-hover:bg-blue-50/40 z-10 shadow-[2px_0_6px_-2px_rgba(0,0,0,0.06)]">
                       <div className="flex items-center space-x-3">
-                        <div
-                          className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs text-white shrink-0 shadow-2xs"
-                          style={{ backgroundColor: guide.brandColor || '#2563EB' }}
-                        >
-                          {guide.name.slice(0, 2).toUpperCase()}
-                        </div>
+                        <AppLogo
+                          name={guide.name}
+                          slug={guide.slug}
+                          brandColor={guide.brandColor}
+                          logoUrl={guide.logoUrl}
+                          website={guide.sources?.[0]?.url}
+                          size="md"
+                        />
                         <div className="min-w-0">
                           <div className="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition-colors truncate">
                             {guide.name}
@@ -407,12 +410,14 @@ export function DirectoryView({
                   {/* Card Header row */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center space-x-3 min-w-0">
-                      <div
-                        className="w-11 h-11 rounded-xl flex items-center justify-center font-bold text-sm text-white shadow-xs shrink-0"
-                        style={{ backgroundColor: guide.brandColor || '#2563EB' }}
-                      >
-                        {guide.name.slice(0, 2).toUpperCase()}
-                      </div>
+                      <AppLogo
+                        name={guide.name}
+                        slug={guide.slug}
+                        brandColor={guide.brandColor}
+                        logoUrl={guide.logoUrl}
+                        website={guide.sources?.[0]?.url}
+                        size="lg"
+                      />
                       <div className="min-w-0">
                         <div className="flex items-center space-x-2">
                           <h3 className="font-bold text-slate-900 text-base group-hover:text-blue-600 transition-colors truncate">

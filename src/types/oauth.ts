@@ -235,4 +235,5 @@ export interface OAuthGuide {
   tags?: string[];
   brandColor?: string;
   iconName?: string;
+  logoUrl?: string;
 }

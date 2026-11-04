@@ -169,10 +169,10 @@ The following applications were selected to demonstrate different OAuth setup re
 
 | Application | Validation Focus | Result |
 |---|---|---|
-| GitHub | OAuth app registration and callback configuration | [Reviewed GitHub's official OAuth documentation and identified the application registration and callback URL configuration requirements. End-to-end authentication was not tested.] |
-| Slack | OAuth scopes, permissions and app configuration | [Reviewed Slack's OAuth documentation and identified the permission scopes and app configuration requirements. Workspace installation and authorization were not tested.] |
-| Google Drive | Google Cloud project and consent configuration | [Reviewed Google's OAuth documentation and identified the Cloud project, consent configuration and permission requirements. App verification and end-to-end authentication were not tested.] |
-| HubSpot | Developer app setup and OAuth configuration | [Reviewed HubSpot's developer documentation and identified the app setup and OAuth authorization requirements. Live authorization was not tested.] |
+| GitHub | OAuth app registration and callback configuration | Reviewed GitHub's official OAuth documentation and identified the application registration and callback URL configuration requirements. End-to-end authentication was not tested. |
+| Slack | OAuth scopes, permissions and app configuration | Reviewed Slack's OAuth documentation and identified the permission scopes and app configuration requirements. Workspace installation and authorization were not tested. |
+| Google Drive | Google Cloud project and consent configuration | Reviewed Google's OAuth documentation and identified the Cloud project, consent configuration and permission requirements. App verification and end-to-end authentication were not tested. |
+| HubSpot | Developer app setup and OAuth configuration | Reviewed HubSpot's developer documentation and identified the app setup and OAuth authorization requirements. Live authorization was not tested. |
 
 These are the tested sample apps and also we can generate new apps if it is needed.
 
@@ -257,4 +257,3 @@ Open the local URL displayed in the terminal.
 
 ---
 
-*OAuth Compass aims to make OAuth setup more understandable, predictable and actionable for developers and AI agent builders.*

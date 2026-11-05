@@ -176,6 +176,44 @@ The following applications were selected to demonstrate different OAuth setup re
 
 These are the tested sample apps and also we can generate new apps if it is needed.
 
+What I Learned
+
+During the OAuth research and validation process, I learned that OAuth setup requirements vary significantly across providers.
+
+OAuth application registration, redirect URI configuration and authorization flows are common concepts, but their implementation differs between platforms.
+
+OAuth scopes and permissions must be selected based on the integration's actual requirements. Requesting unnecessary permissions can introduce additional approval requirements.
+
+Google Drive integrations may involve Google Cloud project configuration, consent screen setup and verification requirements depending on the requested scopes and application audience.
+
+Slack and HubSpot have provider-specific application configuration and authorization requirements that need to be understood before implementation.
+
+GitHub OAuth application setup differs from other providers in its configuration and authorization workflow.
+
+Provider approval timelines are not always publicly available, making it important to distinguish implementation effort from external waiting time.
+
+AI-generated guidance should not automatically be treated as verified information. Official documentation and independent checks are necessary to establish accuracy.
+
+A useful OAuth guide should explain not only what developers need to configure, but also what they should do next and which requirements remain uncertain.
+
+Corrections and Improvements
+
+The research process highlighted the importance of distinguishing between documented requirements, estimated effort and unverified information.
+
+The following principles were incorporated into the project:
+
+Separate developer implementation effort from external provider approval timelines.
+
+Avoid presenting estimated approval durations as official provider timelines.
+
+Clearly distinguish documentation-based guidance from setup steps that have actually been tested.
+
+Include source references so developers can independently verify important requirements.
+
+Identify unsupported or uncertain information rather than presenting it as confirmed.
+
+Prioritize actionable setup instructions and potential blockers over generic OAuth explanations.
+
 ## 7. Limitations
 
 - AI-generated guidance may require manual verification.
